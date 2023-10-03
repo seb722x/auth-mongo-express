@@ -69,18 +69,18 @@ export const userInfo = async(req,res) => {
 export const refreshToken = (req, res) => {
 
     try {
-        const refreshTokenCookie = req.cookies.refreshToken;
-        if(!token) throw new Error( "No token bearer");
-
-        const {uid} = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH);
-        const {token,expiresIn} = generateToken( uid )
+        
+        const {token,expiresIn} = generateToken( uid );
 
         return res.json({token,expiresIn});
-
-
     } catch (error) {
         console.log(error);
         
     }
     
+}
+
+export  const logout = ( req,res)=> {
+    res.clearCookie('refreshToken');
+    res.json({ok:true})
 }
