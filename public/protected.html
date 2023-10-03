@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected</title>
+</head>
+<body>
+    <h1>Protected Route</h1>
+    <div >
+        <h2>Email:   <span id="app">  </span></h2>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded',async(e)=>{
+            try {
+                //const token = localStorage.getItem('token');
+                const resToken =  await fetch('api/v1/auth/refresh',{
+                    method: "GET",
+                    credentials: "include"
+                })
+
+                const {token } = await resToken.json();
+                
+                const res = await fetch('/api/v1/auth/protected',{
+                    method:'GET',
+                    headers:{
+                        
+                        'Content-Type':'application/json',
+                         Authorization: 'Bearer ' + token,
+                    },
+                    credentials:"include" // to llok for cookie token
+                });
+
+                console.log(res.ok,res.status);
+                const data = await res.json();
+                
+                if(res.ok){
+                    document.getElementById("app").textContent = data.email;
+                }
+                
+            } catch (error) {
+                console.log(error);
+                
+            }
+        })
+    </script>
+</body>
+</html>
